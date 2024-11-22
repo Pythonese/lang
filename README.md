@@ -2,8 +2,8 @@
 ## Syntax
 ### Variables
 #### How to declare a variable?
-s: S
+s: S<br/>
 s = "hello"
 #### Equivalent in C++
-string s;
+string s;<br/>
 s = "hello";
