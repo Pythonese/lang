@@ -1,14 +1,6 @@
-PRINT 1
-PRINT -1
-PRINT 1.1
-PRINT 'A'
-PRINT "HELLO"
-PRINT TRUE
-PRINT (
-    1
-    "2"
-    (
-        11
-        "22"
-    )
-)
+t: A
+t = [
+    I (INPUT "Enter a number: ")
+    2
+]
+PRINT t

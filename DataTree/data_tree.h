@@ -39,7 +39,10 @@ namespace data_tree
         
         Dynamic* getAttr(std::string name)
         {
-            return &((Object*)value)->attributes[name];
+            auto& a = ((Object*)value)->attributes;
+            auto f = a.find(name);
+            if (f != a.end()) return &f->second;
+            return nullptr;
         }
         Dynamic* declare(std::string name, Dynamic* type)
         {

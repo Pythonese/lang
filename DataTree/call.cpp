@@ -101,6 +101,10 @@ data_tree::Dynamic data_tree::callS(StandartType type, size_t value)
     case C:
         return Dynamic(standartTypes[S], (size_t)new std::string(std::to_string(bit_cast<char>(value))));
     case S:
+    {
+        auto s = *bit_cast<std::string*>(value);
+        return Dynamic(standartTypes[S], (size_t)new std::string(s));
+    }
         return Dynamic(standartTypes[S], (size_t)new std::string(*bit_cast<std::string*>(value)));
     case B:
         return Dynamic(standartTypes[S], value ? (size_t)new std::string("TRUE") : (size_t)new std::string("FALSE"));

@@ -98,7 +98,8 @@ void ast::Assign::exec()
 {
     if (Variable* left = dynamic_cast<Variable*>(getLeft()))
     {
-        *currentDataObject->getAttr(left->getName()) = getRight()->getValue();
+        getRight()->exec();
+        *currentDataObject->getAttr(left->getName()) = data_tree::callStandartFun(currentCodeObject->getVariable(left->getName())->type, getRight()->getValue());
     }
     else throw std::runtime_error("Invalid assign operator");
 }
@@ -115,6 +116,7 @@ void ast::ColonAssign::exec()
 
 void ast::Call::exec()
 {
+    getRight()->exec();
     getLeft()->call(getRight()->getValue());
     returnValue = getLeft()->getReturnValue();
 }

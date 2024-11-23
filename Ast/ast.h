@@ -106,7 +106,7 @@ namespace ast
         data_tree::Dynamic value;
     public:
         std::vector<Node*>& getNodes() { return nodes; }
-        data_tree::Dynamic& getValue() { exec(); return value; }
+        data_tree::Dynamic& getValue() { return value; }
         void exec();
         data_tree::Dynamic* getType()
         {
@@ -120,7 +120,7 @@ namespace ast
         data_tree::Dynamic value;
     public:
         std::vector<Node*>& getNodes() { return nodes; }
-        data_tree::Dynamic& getValue() { exec(); return value; }
+        data_tree::Dynamic& getValue() { return value; }
         void exec();
         data_tree::Dynamic* getType()
         {
@@ -147,7 +147,7 @@ namespace ast
             O(Object* code, data_tree::Dynamic value) : code(code), value(value) {}
         };
         std::vector<Operator*>& getOperators() { return operators; }
-        data_tree::Dynamic& getValue() { exec(); return *new data_tree::Dynamic(data_tree::standartTypes[data_tree::StandartType::O], (size_t)new O(this, value)); }
+        data_tree::Dynamic& getValue() { return *new data_tree::Dynamic(data_tree::standartTypes[data_tree::StandartType::O], (size_t)new O(this, value)); }
         data_tree::Dynamic& getReturnValue() { return returnValue; }
         void exec();
         Object*& getParent() { return parent; }
@@ -172,6 +172,7 @@ namespace ast
         }
         data_tree::Dynamic* getConstantVariable(std::string name)
         {
+            if (data_tree::isStandartType(name)) return data_tree::standartTypes[data_tree::getStandartType(name)];
             Object* obj = this;
             data_tree::Dynamic* attr = value.getAttr(name);
             while (attr == nullptr)
