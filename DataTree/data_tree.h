@@ -39,15 +39,27 @@ namespace data_tree
         
         Dynamic* getAttr(std::string name)
         {
-            auto& a = ((Object*)value)->attributes;
+            Object* obj = bit_cast<Object*>(value);
+            auto& a = obj->attributes;
             auto f = a.find(name);
-            if (f != a.end()) return &f->second;
+            if (f != a.end())
+            {
+                return &f->second;
+            }
             return nullptr;
         }
         Dynamic* declare(std::string name, Dynamic* type)
         {
-            ((Object*)value)->attributes[name].type = type;
-            return &((Object*)value)->attributes[name];
+            Object* obj = bit_cast<Object*>(value);
+            auto& a = obj->attributes;
+            auto f = a.find(name);
+            if (f != a.end())
+            {
+                f->second.type = type;
+                return &f->second;
+            }
+            a[name] = Dynamic(type, 0);
+            return &a[name];
         }
     };
 

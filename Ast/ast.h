@@ -132,33 +132,49 @@ namespace ast
     {
         std::vector<Operator*> operators;
         data_tree::Dynamic value;
-        data_tree::Dynamic returnValue;
+        data_tree::Dynamic* returnValue;
         Variable argVariable; // init in parser
         Variable retVariable;
         Object* parent;
-        std::unordered_map<Variable, std::vector<data_tree::Dynamic>, VariableHasher> variables;
+        std::unordered_map<std::string, std::vector<data_tree::Dynamic>> variables;
     public:
-        Object(Variable argVariable, Variable retVariable, Object* parent) : argVariable(argVariable), retVariable(retVariable), parent(parent) {}
+        Object(Variable argVariable, Variable retVariable, Object* parent) : argVariable(argVariable), retVariable(retVariable), parent(parent)
+        {
+            variables[argVariable.getName()].push_back(data_tree::Dynamic());
+            variables[retVariable.getName()].push_back(data_tree::Dynamic());
+        }
         struct O
         {
             Object* code;
-            data_tree::Dynamic value;
+            std::unordered_map<std::string, data_tree::Dynamic> attrs;
             O(Object* code) : code(code) {}
-            O(Object* code, data_tree::Dynamic value) : code(code), value(value) {}
+            O(Object* code, std::unordered_map<std::string, data_tree::Dynamic> attrs) : code(code), attrs(attrs) {}
         };
         std::vector<Operator*>& getOperators() { return operators; }
-        data_tree::Dynamic& getValue() { return *new data_tree::Dynamic(data_tree::standartTypes[data_tree::StandartType::O], (size_t)new O(this, value)); }
-        data_tree::Dynamic& getReturnValue() { return returnValue; }
+        data_tree::Dynamic& getValue() { return *new data_tree::Dynamic(data_tree::standartTypes[data_tree::StandartType::O], (size_t)new O(this, {})); }
+        data_tree::Dynamic& getReturnValue() { return *returnValue; }
         void exec();
         Object*& getParent() { return parent; }
         void call(data_tree::Dynamic arg)
         {
-            variables[argVariable].back() = arg;
+            variables[argVariable.getName()].back() = arg;
             exec();
-            returnValue = variables[retVariable].back();
+            returnValue = value.getAttr(retVariable.getName());
         }
         void sendMessage(std::string message)
         {
+        }
+        Object* getParentWhereDeclared(std::string name)
+        {
+            Object* obj = this;
+            data_tree::Dynamic* attr = value.getAttr(name);
+            while (attr == nullptr)
+            {
+                obj = obj->parent;
+                if (obj == nullptr) return nullptr;
+                attr = obj->value.getAttr(name);
+            }
+            return obj;
         }
         data_tree::Dynamic* getVariable(std::string name)
         {

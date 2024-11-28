@@ -116,7 +116,15 @@ size_t data_tree::getStandartType(std::string name)
 
 bool data_tree::isStandartType(std::string name)
 {
-    return getStandartType(name) != (data_tree::StandartType)-1;
+    try
+    {
+        return getStandartType(name) != -1;
+    }
+    catch(const std::exception& e)
+    {
+        return false;
+    }
+    
 }
 
 data_tree::Dynamic data_tree::callStandartFun(Dynamic *fun, Dynamic value)

@@ -1,6 +1,12 @@
-t: A
-t = [
-    I (INPUT "Enter a number: ")
+t: O
+t = {
+    arg: I
+    RETURN := arg
+}
+PRINT (t -1)
+t1: T
+t1 = (
+    1
     2
-]
-PRINT t
+)
+PRINT t1

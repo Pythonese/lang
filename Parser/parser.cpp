@@ -108,9 +108,9 @@ ast::Tuple *parser::parseTuple(const std::vector<token_preparer::Token1> &v, ast
 
 ast::Array *parser::parseArray(const std::vector<token_preparer::Token1> &v, ast::Object *parent, size_t start, size_t end)
 {
-    ast::Array* array = new ast::Array();
-    ast::Node* left;
-    ast::Node* right;
+    ast::Array* tuple = new ast::Array();
+    ast::Node* left = nullptr;
+    ast::Node* right = nullptr;
     ast::Operator* headOper = nullptr;
     for (size_t i = start; i <= end;)
     {
@@ -143,7 +143,7 @@ ast::Array *parser::parseArray(const std::vector<token_preparer::Token1> &v, ast
             i++;
             continue;
         }
-        if (v[i].type >= tokenizer::Token1::U and v[i].type <= tokenizer::Token1::B)
+        if (v[i].type >= tokenizer::Token1::U && v[i].type <= tokenizer::Token1::B)
         {
             ast::Constant* constant = new ast::Constant(data_tree::PrimitiveType(v[i].type - 2), v[i].value);
             if (left == nullptr)
@@ -173,14 +173,19 @@ ast::Array *parser::parseArray(const std::vector<token_preparer::Token1> &v, ast
         {
             if (headOper == nullptr)
             {
-                array->getNodes().push_back(left);
+                if (left == nullptr)
+                {
+                    i++;
+                    continue;
+                }
+                tuple->getNodes().push_back(left);
                 left = nullptr;
                 i++;
                 continue;
             }
             headOper->getLeft() = left;
             headOper->getRight() = right;
-            array->getNodes().push_back(headOper);
+            tuple->getNodes().push_back(headOper);
             headOper = nullptr;
             left = nullptr;
             right = nullptr;
@@ -188,12 +193,28 @@ ast::Array *parser::parseArray(const std::vector<token_preparer::Token1> &v, ast
             continue;
         }
     }
-    return array;
+    if (headOper == nullptr)
+    {
+        if (left != nullptr)
+            tuple->getNodes().push_back(left);
+        left = nullptr;
+    }
+    else
+    {
+        headOper->getLeft() = left;
+        headOper->getRight() = right;
+        if (headOper != nullptr)
+            tuple->getNodes().push_back(headOper);
+        headOper = nullptr;
+        left = nullptr;
+        right = nullptr;
+    }
+    return tuple;
 }
 
 ast::Object *parser::parseObject(const std::vector<token_preparer::Token1> &v, ast::Object *parent, size_t start, size_t end)
 {
-    ast::Object* object = new ast::Object(ast::Variable(v[start].value), ast::Variable("RETURN"), nullptr);
+    ast::Object* object = new ast::Object(ast::Variable("arg"), ast::Variable("RETURN"), nullptr);
     object->getParent() = parent;
     ast::Node* left = nullptr;
     ast::Node* right = nullptr;
@@ -283,6 +304,19 @@ ast::Object *parser::parseObject(const std::vector<token_preparer::Token1> &v, a
             continue;
         }
         throw std::runtime_error("Unexpected token in object " + v[i].toString());
+    }
+    if (headOper == nullptr)
+    {
+    }
+    else
+    {
+        headOper->getLeft() = left;
+        headOper->getRight() = right;
+        if (headOper != nullptr)
+            object->getOperators().push_back(headOper);
+        headOper = nullptr;
+        left = nullptr;
+        right = nullptr;
     }
     return object;
 }

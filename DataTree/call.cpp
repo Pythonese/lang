@@ -165,7 +165,10 @@ data_tree::Dynamic data_tree::callO(StandartType type, size_t value)
     switch (type)
     {
     case O:
-        return Dynamic(standartTypes[StandartType::O], bit_cast<size_t>(Object(bit_cast<Object>(value))));
+        {
+            auto* o = bit_cast<Object*>(value);
+            return Dynamic(standartTypes[StandartType::O], bit_cast<size_t>(Object(*o)));
+        }
     default:
         throw std::runtime_error("Unknown type");
     }
@@ -208,13 +211,29 @@ data_tree::Dynamic data_tree::callPRINT(StandartType type, size_t value)
             break;
         case T:
             {
-                Tuple& t = *(Tuple*)(&value);
-                std::cout << "(\n";
+                if (value == 0) callPRINT(StandartType(S), (size_t)new std::string("NULL"));
+                else
+                {
+                    Tuple& t = *(Tuple*)(&value);
+                    std::cout << "(\n";
+                    for (size_t i = 0; i < t.size(); i++)
+                    {
+                        callPRINT((StandartType)toStandartType(((t)[i].type)), (t)[i].value);
+                    }
+                    std::cout << ")" << std::endl;
+                }
+                
+            }
+            break;
+        case A:
+            {
+                HeapArray& t = *(HeapArray*)(&value);
+                std::cout << "[\n";
                 for (size_t i = 0; i < t.size(); i++)
                 {
                     callPRINT((StandartType)toStandartType(((t)[i].type)), (t)[i].value);
                 }
-                std::cout << ")" << std::endl;
+                std::cout << "]" << std::endl;
             }
             break;
         default:

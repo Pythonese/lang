@@ -15,8 +15,8 @@ void ast::Variable::call(data_tree::Dynamic arg)
         returnValue = data_tree::callStandartFun(data_tree::standartTypes[data_tree::getStandartType(name)], arg);
         return;
     }
-    ((Object*)(parentWhereDeclared->getVariable(name)->value))->call(arg);
-    returnValue = ((Object*)(parentWhereDeclared->getVariable(name)->value))->getReturnValue();
+    ((Object*)(currentCodeObject->getParentWhereDeclared(name)->getVariable(name)->value))->call(arg);
+    returnValue = ((Object*)(currentCodeObject->getParentWhereDeclared(name)->getVariable(name)->value))->getReturnValue();
 }
 
 void ast::Tuple::exec()
@@ -42,7 +42,7 @@ void ast::Array::exec()
     value.type = data_tree::standartTypes[data_tree::StandartType::A];
     for (size_t i = 0; i < nodes.size(); i++)
     {
-        nodes[i]->exec();
+            nodes[i]->exec();
         (*(data_tree::HeapArray*)&value)[i] = nodes[i]->getValue();
     }
 }
@@ -55,6 +55,20 @@ void ast::Object::exec()
     currentCodeObject = this;
     value.value = (size_t)new data_tree::Object(this);
     value.type = data_tree::standartTypes[data_tree::StandartType::O];
+    if (operators.size() != 0)
+    {
+        if (Colon* colon = dynamic_cast<Colon*>(operators[0]))
+        {
+            colon->exec();
+            if (Variable* left = dynamic_cast<Variable*>(colon->getLeft()))
+            {
+                if (left->getName() == "arg")
+                {
+                    *value.getAttr("arg") = variables[argVariable.getName()].back();
+                }
+            }
+        }
+    }
     for (size_t i = 0; i < operators.size(); i++)
     {
         operators[i]->exec();
@@ -80,6 +94,8 @@ void ast::Colon::exec()
         if (Variable* right = dynamic_cast<Variable*>(getRight()))
         {
             currentDataObject->declare(left->getName(), currentCodeObject->getVariable(right->getName()));
+            auto& val1 = *currentDataObject->getAttr(left->getName());
+            auto val2 = val1;
         }
     }
     else throw std::runtime_error("Invalid colon operator");
@@ -98,6 +114,7 @@ void ast::Assign::exec()
 {
     if (Variable* left = dynamic_cast<Variable*>(getLeft()))
     {
+        Object* obj = dynamic_cast<Object*>(getRight());
         getRight()->exec();
         *currentDataObject->getAttr(left->getName()) = data_tree::callStandartFun(currentCodeObject->getVariable(left->getName())->type, getRight()->getValue());
     }
@@ -108,8 +125,11 @@ void ast::ColonAssign::exec()
 {
     if (Variable* left = dynamic_cast<Variable*>(getLeft()))
     {
-        currentDataObject->declare(left->getName(), getRight()->getType());
-        *currentDataObject->getAttr(left->getName()) = getRight()->getValue();
+        currentDataObject->declare(left->getName(), nullptr);
+        auto& val = getRight()->getValue();
+        *currentDataObject->getAttr(left->getName()) = val;
+        auto& val1 = *currentDataObject->getAttr(left->getName());
+        auto val2 = val1;
     }
     else throw std::runtime_error("Invalid colon-assign operator");
 }
