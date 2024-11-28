@@ -4,26 +4,34 @@
 use the command
 `./main`
 ### Print a string
+```
 PRINT "Hello, World!"
-### Basic Calculator 
-N1 := F (INPUT "Enter first number)<br/>
-OPER := C (INPUT "Choose an operation ('+', '-', '*', '/'))<br/>
-N2 := F (INPUT "Enter second number)<br/>
-result = (IF (EQ (OPER, '+'), SUM,<br/>
-    IF (EQ (OPER, '-'), DIFF,<br/>
-        IF (EQ (OPER, '*'), MUL,<br/>
-            IF (EQ (OPER, '/'), DIV, {<br/>
-                RETURN := "Operation error"<br/>
-            })<br/>
-        )<br/>
-    )<br/>
-)) (N1, N2)<br/>
+```
+### Basic Calculator (It doesn't work yet)
+```
+N1 := F (INPUT "Enter first number)
+OPER := C (INPUT "Choose an operation ('+', '-', '*', '/'))
+N2 := F (INPUT "Enter second number)
+result = (IF (EQ (OPER, '+'), SUM,
+    IF (EQ (OPER, '-'), DIFF,
+        IF (EQ (OPER, '*'), MUL,
+            IF (EQ (OPER, '/'), DIV, {
+                RETURN := "Operation error"
+            })
+        )
+    )
+)) (N1, N2)
 PRINT result
+```
 ## Learn
 ### Variables
 #### How to declare a variable?
-s: S<br/>
+```
+s: S
 s = "hello"
+```
 #### Equivalent in C++
-string s;<br/>
+```
+string s;
 s = "hello";
+```
