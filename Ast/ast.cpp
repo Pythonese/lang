@@ -126,6 +126,7 @@ void ast::ColonAssign::exec()
     if (Variable* left = dynamic_cast<Variable*>(getLeft()))
     {
         currentDataObject->declare(left->getName(), nullptr);
+        getRight()->exec();
         auto& val = getRight()->getValue();
         *currentDataObject->getAttr(left->getName()) = val;
         auto& val1 = *currentDataObject->getAttr(left->getName());

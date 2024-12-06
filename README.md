@@ -1,27 +1,22 @@
 # The Lang Programming Language
 ## Build
 ## Run
-use the command
-`./main`
 ### Print a string
 ```
 PRINT "Hello, World!"
 ```
-### Basic Calculator (It doesn't work yet)
+### Create a function
 ```
-N1 := F (INPUT "Enter first number)
-OPER := C (INPUT "Choose an operation ('+', '-', '*', '/'))
-N2 := F (INPUT "Enter second number)
-result = (IF (EQ (OPER, '+'), SUM,
-    IF (EQ (OPER, '-'), DIFF,
-        IF (EQ (OPER, '*'), MUL,
-            IF (EQ (OPER, '/'), DIV, {
-                RETURN := "Operation error"
-            })
-        )
+fun: O
+fun = {
+    arg: I
+    RETURN := (
+        arg
+        "hello"
     )
-)) (N1, N2)
-PRINT result
+}
+Q := fun -1
+PRINT Q
 ```
 ## Learn
 ### Variables
@@ -34,4 +29,18 @@ s = "hello"
 ```
 string s;
 s = "hello";
+```
+#### How to declare a variable with automatic typing?
+```
+s := "hello"
+```
+#### How to declare a constant variable?
+```
+S1 := "hello"
+```
+The Lang has no keywords. It has only variables and operators.
+#### Standart Variables
+```
+U, I, F, C, S, B, T, O,
+PRINT, INPUT,
 ```

@@ -1,12 +1,10 @@
-t: O
-t = {
+fun: O
+fun = {
     arg: I
-    RETURN := arg
+    RETURN := (
+        arg
+        "hello"
+    )
 }
-PRINT (t -1)
-t1: T
-t1 = (
-    1
-    2
-)
-PRINT t1
+Q := fun -1
+PRINT Q
