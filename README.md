@@ -39,7 +39,7 @@ s := "hello"
 S1 := "hello"
 ```
 The Lang has no keywords. It has only variables and operators.
-#### Standart Variables
+#### Standard Variables
 ```
 U, I, F, C, S, B, T, O,
 PRINT, INPUT,
