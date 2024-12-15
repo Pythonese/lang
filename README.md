@@ -1,6 +1,14 @@
 # The Lang Programming Language
 ## Build
+```
+git clone https://github.com/Pythonese/lang
+cmake .
+make
+```
 ## Run
+```
+./Lang input.txt
+```
 ### Print a string
 ```
 PRINT "Hello, World!"
