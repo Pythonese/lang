@@ -1,10 +1,14 @@
 # The Lang Programming Language
+## Dependencies
+cmake<br/>
+C and C++ compiler
 ## Build
 ```
 git clone https://github.com/Pythonese/lang
 cmake .
 make
 ```
+For Windows you have to write your current compiler path to CMakePresets.json.
 ## Run
 ```
 ./Lang input.txt
