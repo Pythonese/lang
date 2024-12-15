@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
     }
     else
     {
-        file.open("/media/danil/LocalDisk2/My_lang_on_c++1/input.txt");
+        file.open("../../../input.txt");
     }
     char str1[1000]{};
     file.read(str1, 1000);
